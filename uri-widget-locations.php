@@ -131,6 +131,11 @@ function uri_widget_locations_get_current_path($strip=TRUE) {
 		$current_path = $url['path'];
 	}
 
+	// remove the query string
+	if(strpos($current_path, '?') !== FALSE) {
+		$bits = explode('?', $current_path);
+		$current_path = $bits[0];
+	}
 
 	$base_bits = parse_url( site_url() );	
 	if ( strpos ( $current_path, $base_bits['path'] ) === 0 ) {
