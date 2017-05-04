@@ -90,15 +90,17 @@ function uri_widget_locations_filter_sidebar_widgets( $sidebars_widgets ) {
 	
 	// iterate over widgets, hide those that do not display on this URL
 	foreach($widgets as $sidebar_key => $sidebar) {
-		foreach($sidebar as $key => $widget) {
-			// why not use list()?  because it's different in php 5 and php 7
-			$bits = explode('-', $widget);
-			$option = $bits[0];
-			$number = $bits[1];
-			$show = uri_widget_locations_widget_is_visible( $option, $number );
-			if( $show ) {
-			} else {
-				unset ( $widgets[$sidebar_key][$key] );
+		if(is_array($sidebar)) {
+			foreach($sidebar as $key => $widget) {
+				// why not use list()?  because it's different in php 5 and php 7
+				$bits = explode('-', $widget);
+				$option = $bits[0];
+				$number = $bits[1];
+				$show = uri_widget_locations_widget_is_visible( $option, $number );
+				if( $show ) {
+				} else {
+					unset ( $widgets[$sidebar_key][$key] );
+				}
 			}
 		}
 	}
