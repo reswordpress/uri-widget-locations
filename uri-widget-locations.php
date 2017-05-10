@@ -133,8 +133,8 @@ function uri_widget_locations_get_current_path($strip=TRUE) {
 		$current_path = $url['path'];
 	}
 
-	// remove the query string
-	if(strpos($current_path, '?') !== FALSE) {
+	// remove the query string when it isn't a preview
+	if(!isset($_GET['preview']) && strpos($current_path, '?') !== FALSE) {
 		$bits = explode('?', $current_path);
 		$current_path = $bits[0];
 	}
