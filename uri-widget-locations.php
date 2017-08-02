@@ -65,7 +65,9 @@ function uri_widget_locations_widget_is_visible( $option, $number ) {
 // 	echo 'Number: <pre>', print_r($number, TRUE), '</pre>';
 //	echo 'Widget: <pre>', print_r($widget, TRUE), '</pre>';
 
-	return uri_widget_locations_match_url($widget['uri2017-urls'] );
+	$url_to_match = (isset($widget['uri2017-urls'])) ? $widget['uri2017-urls'] : NULL;
+
+	return uri_widget_locations_match_url( $url_to_match );
 }
 
 
@@ -121,16 +123,22 @@ add_filter( 'sidebars_widgets', 'uri_widget_locations_filter_sidebar_widgets', 1
 function uri_widget_locations_get_current_path($strip=TRUE) {
 
 	
-	if ( strpos($_SERVER['HTTP_REFERER'], 'wp-admin/customize.php') === FALSE ) {
+	if ( isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'wp-admin/customize.php') === FALSE ) {
 		$current_path = trim($_SERVER['REQUEST_URI']);
 	} else {
 		// when the Customizer is being used, we need to use the referrer 
 		// because the Request URI is a different endpoint.
-		$url = parse_url( $_SERVER['HTTP_REFERER'] );
-		$q = trim( urldecode ( $url['query'] ) );
-		$q = str_replace( 'url=', '', $q );
-		$url = parse_url ( $q );
-		$current_path = $url['path'];
+		if( isset($_SERVER['HTTP_REFERER']) ) {
+			$url = parse_url( $_SERVER['HTTP_REFERER'] );
+		}
+		if( isset($url['query']) ) {
+			$q = trim( urldecode( $url['query'] ) );
+			$q = str_replace( 'url=', '', $q );
+			$url = parse_url ( $q );
+			$current_path = $url['path'];
+		} else {
+			$current_path = '';
+		}
 	}
 
 	// remove the query string when it isn't a preview
